@@ -25,7 +25,34 @@ interface Graph<VertexType> {
      */
     fun clear()
 }
+class myGraph<VertexType>:Graph<VertexType>{
+    private var firstDict:MutableMap<VertexType,MutableMap<VertexType,Double>> = mutableMapOf()
+    override fun getVertices(): Set<VertexType> {
+        return firstDict.keys
 
+    }
+
+    override fun clear() {
+        firstDict.clear()
+    }
+
+    override fun getEdges(from: VertexType): Map<VertexType, Double> {
+
+        return firstDict[from]!!.toMap()
+    }
+
+    override fun addEdge(from: VertexType, to: VertexType, cost: Double) {
+        if (from in firstDict.keys) {
+            firstDict[from]!!.put(to, cost)
+        }else{
+            firstDict.put(from, mutableMapOf(to to cost))
+        }
+        if (to !in firstDict.keys){
+            firstDict.put(to,mutableMapOf())
+        }
+    }
+
+}
 /**
  * ``MinPriorityQueue`` maintains a priority queue where the lower
  *  the priority value, the sooner the element will be removed from
@@ -57,4 +84,24 @@ interface MinPriorityQueue<T> {
      *   the order.
      */
     fun adjustPriority(elem: T, newPriority: Double)
+}
+class MyPriorityQueue<T>:MinPriorityQueue<T> {
+    private var minHeap = MinHeap<T>()
+    override fun isEmpty(): Boolean {
+        return minHeap.isEmpty()
+    }
+
+    override fun next(): T? {
+        return minHeap.getMin()
+    }
+
+    override fun adjustPriority(elem: T, newPriority: Double) {
+        minHeap.adjustHeapNumber(elem,newPriority)
+    }
+
+    override fun addWithPriority(elem: T, priority: Double) {
+        minHeap.insert(elem,priority)
+
+    }
+
 }
